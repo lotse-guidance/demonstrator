@@ -1,0 +1,9 @@
+<mat-card (mouseenter)="feedback.emit('preview start')" (mouseleave)="feedback.emit('preview end')">
+  <mat-card-content *ngIf="suggestion.description">
+    {{ suggestion.description }}
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button (click)="feedback.emit('accept')">Accept</button>
+    <button mat-button (click)="feedback.emit('reject')">Reject</button>
+  </mat-card-actions>
+</mat-card>

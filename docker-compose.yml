@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: lotse
+      dockerfile: Dockerfile
+    container_name: gsd-backend
+    volumes:
+    - ./lotse/app:/app
+    entrypoint: "/start-reload.sh"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MAX_WORKERS=1
+      - GUNICORN_CMD_ARGS="--reload"
+    ports:
+    - 8019:80
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    container_name: gsd-frontend
+    ports:
+      - 4200:4200

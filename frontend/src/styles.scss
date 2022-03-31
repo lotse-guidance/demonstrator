@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: #f0f2f5;
+  overflow: auto;
+}
+
+snack-bar-container {
+  pointer-events: all;
+}
+
+.resetButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

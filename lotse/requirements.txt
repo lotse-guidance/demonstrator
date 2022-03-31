@@ -1,0 +1,12 @@
+fastapi
+fastapi-health
+uvicorn[standard]
+pandas
+aiofiles
+broadcaster[redis]==0.2.0
+orjson
+requests
+lotse==1.0.0
+
+
+sklearn

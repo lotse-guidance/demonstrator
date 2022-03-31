@@ -1,0 +1,8 @@
+metadata:
+  strategy: Meta Strategy
+  description: Always prioritize outliers over time slider, if possible.
+
+filter_actions:
+  args: [actions, ctx]
+  load: |
+    return sorted(actions, key=lambda a: a.metadata['priority'])[-1:]

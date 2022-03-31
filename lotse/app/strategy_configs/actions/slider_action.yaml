@@ -1,0 +1,50 @@
+type: action
+
+metadata:
+  description: Slider action!
+  degree: orienting
+  action_id: timeslider
+  priority: 1
+
+generate_suggestion_content:
+  args: [ctx]
+  import:
+    - datetime
+    - calendar
+  load: |
+      d = datetime.datetime.strptime(ctx.month, '%Y-%m-%d').date()
+      suggestion = datetime.date(d.year, d.month + 1, calendar.monthrange(d.year, d.month + 1)[-1])
+
+      return (suggestion, 'Move', 'Consider moving to the next month!')
+
+
+threshold: .10
+condition:
+  type: function
+  args: [state]
+  load: |
+      month = state.get_current_month()
+      all_data = len(month)
+      seen = len(list(filter(lambda d: 'hovered' in d and len(d['hovered']) > 0, month)))
+      print(all_data, seen, seen/all_data, self.threshold)
+      if all_data == 0:
+        return False
+      return seen/all_data > self.threshold
+
+is_applicable:
+  args: [ctx, delta]
+  load: |
+      return self.condition(ctx) and not self.suggested
+
+accept:
+  args: [suggestion, context, delta]
+  load: |
+      context.month = suggestion.suggestion.event.value
+      self.threshold *= .95
+      self.suggested = False
+
+reject:
+  args: [suggestion, context, delta]
+  load: |
+      self.threshold = min(0.9, self.threshold + 0.05)
+      self.suggested = False

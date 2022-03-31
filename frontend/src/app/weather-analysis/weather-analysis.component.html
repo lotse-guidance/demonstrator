@@ -1,0 +1,19 @@
+<div fxLayout="row wrap" fxLayout.xs="column"  fxLayoutAlign="center">
+  <div fxFlex="70%">
+    <div fxLayout="row wrap">
+      <div fxFlex="100%" class="container">
+        <gs-dimpvis [data]="data" *ngIf="date"
+                    [currYear]="date"
+                    [(xAxisDimension)]="xAxisDimension" [(yAxisDimension)]="yAxisDimension" [(colorDimension)]="colorDimension"
+        ></gs-dimpvis>
+        <gs-axis-selector label="y-axis" [(value)]="yAxisDimension" [dimensions]="dimensions"></gs-axis-selector>
+        <gs-axis-selector label="x-axis" [(value)]="xAxisDimension" [dimensions]="dimensions"></gs-axis-selector>
+      </div>
+      <div fxFlex="50%">
+        <div class="container">
+          <gs-timeslider *ngIf="minDate" [minYear]="minDate" [maxYear]="maxDate" [(currYear)]="date"></gs-timeslider>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

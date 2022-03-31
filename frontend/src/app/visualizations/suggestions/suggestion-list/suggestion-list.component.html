@@ -1,0 +1,11 @@
+<div class="suggestions" [ngClass]="{'horizontal': horizontal, 'vertical': !horizontal}">
+  <div id="suggestionPaneTitle">
+    <h3 *ngIf="!hideTitle">Suggestions</h3>
+  </div>
+  <ng-template #noSuggestions>
+    Currently no suggestions.
+  </ng-template>
+  <ng-container *ngIf="suggestions.length > 0 else noSuggestions">
+    <gs-suggestion-card *ngFor="let sugg of suggestions" [suggestion]="sugg" (feedback)="actions.emit({suggestion: sugg, action: $event})"></gs-suggestion-card>
+  </ng-container>
+</div>

@@ -1,0 +1,12 @@
+metadata:
+  strategy: Timeslider
+  description: Suggests an alternative month to investigate
+  strategy_id: month_change
+  degree: orienting
+
+action:
+  file_path: actions/slider_action.yaml
+
+determine_applicability:
+  args: [ctx, delta]
+  load: return True

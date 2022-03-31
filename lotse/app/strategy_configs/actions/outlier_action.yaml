@@ -1,0 +1,52 @@
+type: action
+
+metadata:
+  description: Detects outliers and guides towards them
+  degree: orienting
+  action_id: highlight
+  # the priority field is read by the custom meta-strategy to avoid concurrent suggestions from multiple strategies
+  priority: 2
+
+timeout: 10
+
+generate_suggestion_content:
+  args: [ctx]
+  import:
+    - random
+    - from sklearn.cluster import DBSCAN
+  load: |
+    if ctx.x_axis is None or ctx.y_axis is None:
+      return
+
+    month = ctx.get_current_month()
+    points = list(map(lambda p: [p[ctx.x_axis], p[ctx.y_axis]], month))
+    if len(points) == 0:
+      return
+
+    clustering = DBSCAN(eps=3, min_samples=2).fit(points)
+    suggestions = [point['station'] for point, label in zip(month, clustering.labels_) if label == -1]
+    return (suggestions, f"{len(suggestions)} outliers detected", "Are you stuck? Consider investigating outliers in the data (detected by DBSCAN).")
+
+condition:
+  args: [state]
+  import: [time]
+  load: |
+      return int(time.time()) - state.last_interaction > self.timeout
+
+is_applicable:
+  args: [ctx, delta]
+  load: |
+      print(int(time.time()), int(time.time()) - ctx.last_interaction, self.suggested)
+      return self.condition(ctx) and not self.suggested
+
+accept:
+  args: [suggestion, context, delta]
+  load: |
+      self.timeout -= 2
+      self.suggested = False
+
+reject:
+  args: [suggestion, context, delta]
+  load: |
+      self.timeout += 10
+      self.suggested = False

@@ -1,0 +1,45 @@
+# VARIABLES
+
+
+# load JSON from REST endpoint
+#data:
+#  url: "https://your.server/data.json"
+#  type: api_json
+
+# load data from local CSV file
+data:
+  file_path: "../data/measurements.csv"
+  type: from_csv
+
+# initialize analysis state
+last_interaction: 0
+month: "2015-01-31"
+x_axis: humidity
+y_axis: pressure
+
+
+# helper function to return only data from the current month
+get_current_month:
+  type: function # specify type:function to define functions
+  args: [] # define the list of expected arguments
+  # define the callback in python syntax
+  load: |
+      return list(filter(lambda p: p['date'] == self.month, self.data))
+
+
+# INITIALIZE
+initialize:
+  args: []
+  import: [time] # you can also import python modules you might need in your callbacks
+  load: self.last_interaction = int(time.time())
+
+# CALLBACKS
+
+# a custom callback to store in which dimensions a datapoint was hovered
+update_hover:
+  type: function
+  args: [station, dim1, dim2] # arguments to be specified via the REST endpoint
+  load: |
+      dp = next(dp for dp in self.get_current_month() if dp['station'] == station)
+      dp['hovered'] = [dim1, dim2]
+      return dp
